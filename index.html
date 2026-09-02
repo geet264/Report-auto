@@ -86,32 +86,7 @@
                         <span class="ribbon-group-label">Data</span>
                     </div>
 
-                    <!-- GROUP: VISUALS -->
-                    <div class="ribbon-group">
-                        <div class="ribbon-group-tools">
-                            <button class="ribbon-btn" onclick="insertVisualToDoc('card')" title="Insert Power BI Metric KPI Card">
-                                <i class="fa-solid fa-square-poll-vertical text-blue"></i>
-                                <span>KPI Card</span>
-                            </button>
-                            <button class="ribbon-btn" onclick="insertVisualToDoc('bar')" title="Insert Incident Severity Bar Chart">
-                                <i class="fa-solid fa-chart-simple text-orange"></i>
-                                <span>Bar Chart</span>
-                            </button>
-                            <button class="ribbon-btn" onclick="insertVisualToDoc('donut')" title="Insert Status / Severity Donut Chart">
-                                <i class="fa-solid fa-chart-pie text-purple"></i>
-                                <span>Donut</span>
-                            </button>
-                            <button class="ribbon-btn" onclick="insertVisualToDoc('line')" title="Insert 7-Day Trend Line Chart">
-                                <i class="fa-solid fa-chart-line text-cyan"></i>
-                                <span>Trend Line</span>
-                            </button>
-                            <button class="ribbon-btn" onclick="insertVisualToDoc('table')" title="Insert Dynamic SOC Incidents Table">
-                                <i class="fa-solid fa-table text-indigo"></i>
-                                <span>Data Table</span>
-                            </button>
-                        </div>
-                        <span class="ribbon-group-label">Insert Visuals</span>
-                    </div>
+
 
                     <!-- GROUP: AI INSIGHTS -->
                     <div class="ribbon-group">
@@ -208,16 +183,7 @@
                 </div>
 
                 <!-- TAB 4: VIEW -->
-                <div class="ribbon-pane" id="tab-view">
-                    <div class="ribbon-group">
-                        <div class="ribbon-group-tools">
-                            <button class="ribbon-btn" onclick="setDocumentZoom(0.75)"><span>75%</span></button>
-                            <button class="ribbon-btn active" onclick="setDocumentZoom(1.0)"><span>100%</span></button>
-                            <button class="ribbon-btn" onclick="setDocumentZoom(1.25)"><span>125%</span></button>
-                            <button class="ribbon-btn" onclick="setDocumentZoom('fit')"><span>Fit Page</span></button>
-                        </div>
-                        <span class="ribbon-group-label">Zoom</span>
-                    </div>
+
 
                     <div class="ribbon-group">
                         <div class="ribbon-group-tools">
@@ -239,17 +205,14 @@
 
             <!-- LEFT VIEW SWITCHER (POWER BI STYLE) -->
             <aside class="pbi-view-rail">
-                <button class="rail-item active" data-view="report" onclick="switchView('report')" title="Report View: Word Document Canvas">
+                <button class="rail-item active" data-view="report" onclick="switchView('report')" title="Report View (Word Canvas)">
                     <i class="fa-solid fa-file-lines"></i>
-                    <span class="rail-tooltip">Report (Word Canvas)</span>
                 </button>
-                <button class="rail-item" data-view="data" onclick="switchView('data')" title="Data View: Excel Data Grid Explorer">
+                <button class="rail-item" data-view="data" onclick="switchView('data')" title="Data View (Excel Grid)">
                     <i class="fa-solid fa-table"></i>
-                    <span class="rail-tooltip">Data Grid</span>
                 </button>
-                <button class="rail-item" data-view="model" onclick="switchView('model')" title="Model View: Column & Field Mapping">
+                <button class="rail-item" data-view="model" onclick="switchView('model')" title="Model View (Field Mapping)">
                     <i class="fa-solid fa-diagram-project"></i>
-                    <span class="rail-tooltip">Field Mapping</span>
                 </button>
             </aside>
 
@@ -261,17 +224,29 @@
                     <!-- CANVAS TOP UTILITY BAR -->
                     <div class="canvas-infobar">
                         <div class="infobar-left">
-                            <span class="info-pill"><i class="fa-solid fa-file-word text-blue"></i> A4 Standard Layout (210 &times; 297 mm)</span>
+                            <span class="info-pill"><i class="fa-solid fa-file-word text-blue"></i> A4 Layout</span>
                             <span class="info-pill" id="pillPageCount">Pages: 2</span>
                             <span class="info-pill" id="pillActiveClient">Client: <strong>Tata Technologies</strong></span>
                         </div>
 
+                        <!-- CENTER: REFRESH & ZOOM CONTROLS (USER REQUEST) -->
+                        <div class="infobar-center">
+                            <button class="btn-canvas-refresh" onclick="refreshReportData()" title="1-Click Refresh: Recalculates all measures, charts, and syncs Word report">
+                                <i class="fa-solid fa-arrows-rotate"></i>
+                                <span>Refresh</span>
+                            </button>
+                            <span class="divider-v"></span>
+                            <div class="zoom-controls-group">
+                                <button class="btn-zoom" onclick="zoomOut()" title="Zoom Out"><i class="fa-solid fa-magnifying-glass-minus"></i></button>
+                                <span id="zoomLevelDisplay" class="zoom-level-text">100%</span>
+                                <button class="btn-zoom" onclick="zoomIn()" title="Zoom In"><i class="fa-solid fa-magnifying-glass-plus"></i></button>
+                                <button class="btn-zoom reset-btn" onclick="resetZoom()" title="Reset to 100%">100%</button>
+                                <button class="btn-zoom fit-btn" onclick="fitPageZoom()" title="Fit Page to Screen">Fit</button>
+                            </div>
+                        </div>
+
                         <div class="infobar-right">
                             <button class="btn-canvas-tool" onclick="addNewA4Page()"><i class="fa-solid fa-plus"></i> Add Page</button>
-                            <span class="divider-v"></span>
-                            <button class="btn-canvas-tool" onclick="setDocumentZoom(0.8)"><i class="fa-solid fa-magnifying-glass-minus"></i></button>
-                            <span id="zoomLevelDisplay" style="font-size:11px; font-weight:700; min-width:38px; text-align:center;">100%</span>
-                            <button class="btn-canvas-tool" onclick="setDocumentZoom(1.2)"><i class="fa-solid fa-magnifying-glass-plus"></i></button>
                         </div>
                     </div>
 

@@ -844,10 +844,42 @@ window.setDocumentZoom = function(scale) {
     const display = document.getElementById("zoomLevelDisplay");
     if (!desk) return;
 
-    if (scale === 'fit') scale = 0.9;
+    if (scale === 'fit') {
+        const wrapper = document.getElementById("deskWrapper");
+        if (wrapper) {
+            const availableWidth = wrapper.clientWidth - 48;
+            const pageA4WidthPx = 794; // 210mm in px (~96dpi)
+            scale = Math.min(1.2, Math.max(0.5, Math.round((availableWidth / pageA4WidthPx) * 100) / 100));
+        } else {
+            scale = 0.85;
+        }
+    } else {
+        scale = Math.min(1.6, Math.max(0.4, Math.round(scale * 100) / 100));
+    }
+
     AppState.zoomLevel = scale;
     desk.style.transform = `scale(${scale})`;
     if (display) display.textContent = `${Math.round(scale * 100)}%`;
+};
+
+window.zoomIn = function() {
+    const cur = AppState.zoomLevel || 1.0;
+    const next = Math.min(1.6, Math.round((cur + 0.1) * 10) / 10);
+    setDocumentZoom(next);
+};
+
+window.zoomOut = function() {
+    const cur = AppState.zoomLevel || 1.0;
+    const next = Math.max(0.4, Math.round((cur - 0.1) * 10) / 10);
+    setDocumentZoom(next);
+};
+
+window.resetZoom = function() {
+    setDocumentZoom(1.0);
+};
+
+window.fitPageZoom = function() {
+    setDocumentZoom('fit');
 };
 
 function initDocumentTheme() {
