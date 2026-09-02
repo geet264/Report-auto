@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AltiSec Report Studio | Power BI for Word Documents</title>
+
+    <!-- FONTS: PLUS JAKARTA SANS & OUTFIT -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- SHEETJS, CHART.JS, DOCX & HTML2PDF LIBRARIES -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <!-- APPLICATION STYLES -->
+    <link rel="stylesheet" href="style.css?v=2.0">
+</head>
+<body class="powerbi-theme-dark">
+
+    <!-- POWER BI APPLICATION SHELL -->
+    <div class="pbi-app">
+
+        <!-- 1. TOP WINDOW BAR -->
+        <header class="pbi-titlebar">
+            <div class="pbi-title-left">
+                <div class="pbi-brand-icon"><i class="fa-solid fa-chart-column"></i></div>
+                <div class="pbi-app-name">
+                    <strong>AltiSec Report Studio</strong>
+                    <span class="pbi-badge">Power BI Document Builder</span>
+                </div>
+                <div class="pbi-quick-access">
+                    <button class="pbi-qa-btn" id="btnQaRefresh" title="1-Click Refresh Data (Recalculate All Visuals & Document)"><i class="fa-solid fa-arrows-rotate"></i></button>
+                    <button class="pbi-qa-btn" id="btnQaSample" title="Load Standard SOC Sample Dataset"><i class="fa-solid fa-database"></i></button>
+                    <button class="pbi-qa-btn" id="btnQaExportWord" title="Export to Microsoft Word (.docx)"><i class="fa-solid fa-file-word"></i></button>
+                </div>
+            </div>
+
+            <div class="pbi-doc-title" id="topDocTitle">
+                <span id="txtReportTitle">Monthly SOC Security Report</span> &mdash; <span id="txtDocStatus" class="status-badge live">Live Sync</span>
+            </div>
+
+            <div class="pbi-title-right">
+                <button class="pbi-theme-toggle" id="btnThemeToggle" title="Toggle Light / Dark Studio Theme">
+                    <i class="fa-solid fa-moon"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- 2. POWER BI OFFICE RIBBON -->
+        <nav class="pbi-ribbon">
+            <div class="pbi-ribbon-tabs">
+                <button class="ribbon-tab active" data-tab="tab-home">Home</button>
+                <button class="ribbon-tab" data-tab="tab-insert">Insert</button>
+                <button class="ribbon-tab" data-tab="tab-modeling">Modeling</button>
+                <button class="ribbon-tab" data-tab="tab-view">View</button>
+            </div>
+
+            <div class="pbi-ribbon-content">
+                <!-- TAB 1: HOME -->
+                <div class="ribbon-pane active" id="tab-home">
+                    <!-- GROUP: DATA -->
+                    <div class="ribbon-group">
+                        <div class="ribbon-group-tools">
+                            <label class="ribbon-btn large" for="excelFileInput" title="Import Excel (.xlsx) or CSV operational report">
+                                <i class="fa-solid fa-file-excel text-green"></i>
+                                <span>Get Data</span>
+                            </label>
+                            <input type="file" id="excelFileInput" accept=".xlsx,.xls,.csv" style="display:none;">
+
+                            <button class="ribbon-btn large primary-glow" id="btnRibbonRefresh" title="1-Click Refresh: Recalculates all measures, updates charts, and syncs Word document">
+                                <i class="fa-solid fa-arrows-rotate text-emerald"></i>
+                                <span>Refresh</span>
+                            </button>
+
+                            <button class="ribbon-btn large" id="btnLoadSampleData" title="Load pre-configured SOC Incident Dataset (1,284 events)">
+                                <i class="fa-solid fa-bolt-lightning text-yellow"></i>
+                                <span>Sample Data</span>
+                            </button>
+                        </div>
+                        <span class="ribbon-group-label">Data</span>
+                    </div>
+
+                    <!-- GROUP: VISUALS -->
+                    <div class="ribbon-group">
+                        <div class="ribbon-group-tools">
+                            <button class="ribbon-btn" onclick="insertVisualToDoc('card')" title="Insert Power BI Metric KPI Card">
+                                <i class="fa-solid fa-square-poll-vertical text-blue"></i>
+                                <span>KPI Card</span>
+                            </button>
+                            <button class="ribbon-btn" onclick="insertVisualToDoc('bar')" title="Insert Incident Severity Bar Chart">
+                                <i class="fa-solid fa-chart-simple text-orange"></i>
+                                <span>Bar Chart</span>
+                            </button>
+                            <button class="ribbon-btn" onclick="insertVisualToDoc('donut')" title="Insert Status / Severity Donut Chart">
+                                <i class="fa-solid fa-chart-pie text-purple"></i>
+                                <span>Donut</span>
+                            </button>
+                            <button class="ribbon-btn" onclick="insertVisualToDoc('line')" title="Insert 7-Day Trend Line Chart">
+                                <i class="fa-solid fa-chart-line text-cyan"></i>
+                                <span>Trend Line</span>
+                            </button>
+                            <button class="ribbon-btn" onclick="insertVisualToDoc('table')" title="Insert Dynamic SOC Incidents Table">
+                                <i class="fa-solid fa-table text-indigo"></i>
+                                <span>Data Table</span>
+                            </button>
+                        </div>
+                        <span class="ribbon-group-label">Insert Visuals</span>
+                    </div>
+
+                    <!-- GROUP: AI INSIGHTS -->
+                    <div class="ribbon-group">
+                        <div class="ribbon-group-tools">
+                            <button class="ribbon-btn large" id="btnAiSummary" title="Generate intelligent Executive Summary from active data">
+                                <i class="fa-solid fa-wand-magic-sparkles text-pink"></i>
+                                <span>AI Summary</span>
+                            </button>
+                            <button class="ribbon-btn" id="btnAnomalyCheck" title="Check for critical spikes and SLA drops">
+                                <i class="fa-solid fa-triangle-exclamation text-yellow"></i>
+                                <span>Health Check</span>
+                            </button>
+                        </div>
+                        <span class="ribbon-group-label">Document Intelligence</span>
+                    </div>
+
+                    <!-- GROUP: EXPORT -->
+                    <div class="ribbon-group">
+                        <div class="ribbon-group-tools">
+                            <button class="ribbon-btn large btn-highlight-word" id="btnExportWord" title="Download clean, structured Microsoft Word document (.docx)">
+                                <i class="fa-solid fa-file-word text-blue"></i>
+                                <span>Export Word</span>
+                            </button>
+                            <button class="ribbon-btn large" id="btnExportPdf" title="Export publication-ready PDF">
+                                <i class="fa-solid fa-file-pdf text-red"></i>
+                                <span>Export PDF</span>
+                            </button>
+                        </div>
+                        <span class="ribbon-group-label">Publish</span>
+                    </div>
+                </div>
+
+                <!-- TAB 2: INSERT -->
+                <div class="ribbon-pane" id="tab-insert">
+                    <div class="ribbon-group">
+                        <div class="ribbon-group-tools">
+                            <button class="ribbon-btn large" onclick="addNewA4Page()" title="Add a new blank A4 Word document page">
+                                <i class="fa-solid fa-file-circle-plus text-blue"></i>
+                                <span>+ New Page</span>
+                            </button>
+                            <button class="ribbon-btn" onclick="insertTextBox()" title="Insert editable paragraph text block">
+                                <i class="fa-solid fa-paragraph text-slate"></i>
+                                <span>Text Block</span>
+                            </button>
+                            <button class="ribbon-btn" onclick="insertCalloutNote()" title="Insert Callout or Warning Box">
+                                <i class="fa-solid fa-quote-left text-yellow"></i>
+                                <span>Callout Note</span>
+                            </button>
+                        </div>
+                        <span class="ribbon-group-label">Pages & Text</span>
+                    </div>
+
+                    <div class="ribbon-group">
+                        <div class="ribbon-group-tools">
+                            <button class="ribbon-btn" onclick="insertVisualToDoc('card')"><i class="fa-solid fa-square-poll-vertical text-blue"></i><span>KPI Card</span></button>
+                            <button class="ribbon-btn" onclick="insertVisualToDoc('bar')"><i class="fa-solid fa-chart-column text-orange"></i><span>Bar Chart</span></button>
+                            <button class="ribbon-btn" onclick="insertVisualToDoc('donut')"><i class="fa-solid fa-chart-pie text-purple"></i><span>Donut Chart</span></button>
+                            <button class="ribbon-btn" onclick="insertVisualToDoc('line')"><i class="fa-solid fa-chart-line text-cyan"></i><span>Line Chart</span></button>
+                            <button class="ribbon-btn" onclick="insertVisualToDoc('table')"><i class="fa-solid fa-table-cells text-indigo"></i><span>Table</span></button>
+                        </div>
+                        <span class="ribbon-group-label">Visual Objects</span>
+                    </div>
+                </div>
+
+                <!-- TAB 3: MODELING -->
+                <div class="ribbon-pane" id="tab-modeling">
+                    <div class="ribbon-group">
+                        <div class="ribbon-group-tools">
+                            <div class="ribbon-input-block">
+                                <label><i class="fa-solid fa-clock text-blue"></i> SLA Target (Hrs):</label>
+                                <input type="number" id="slaTargetHoursInput" value="4" min="0.5" max="72" step="0.5" class="ribbon-input-sm">
+                            </div>
+                            <div class="ribbon-input-block">
+                                <label><i class="fa-solid fa-bullseye text-green"></i> SLA Goal (%):</label>
+                                <input type="number" id="slaGoalPercentInput" value="95" min="50" max="100" class="ribbon-input-sm">
+                            </div>
+                        </div>
+                        <span class="ribbon-group-label">Parameters</span>
+                    </div>
+
+                    <div class="ribbon-group">
+                        <div class="ribbon-group-tools">
+                            <button class="ribbon-btn" onclick="switchView('model')" title="Map raw spreadsheet columns to report dimensions">
+                                <i class="fa-solid fa-diagram-project text-cyan"></i>
+                                <span>Column Mapping</span>
+                            </button>
+                            <button class="ribbon-btn" onclick="recalculateAllMeasures(true)" title="Recalculate SLA, Response Time and Ageing metrics">
+                                <i class="fa-solid fa-calculator text-emerald"></i>
+                                <span>Recalculate</span>
+                            </button>
+                        </div>
+                        <span class="ribbon-group-label">Calculations</span>
+                    </div>
+                </div>
+
+                <!-- TAB 4: VIEW -->
+                <div class="ribbon-pane" id="tab-view">
+                    <div class="ribbon-group">
+                        <div class="ribbon-group-tools">
+                            <button class="ribbon-btn" onclick="setDocumentZoom(0.75)"><span>75%</span></button>
+                            <button class="ribbon-btn active" onclick="setDocumentZoom(1.0)"><span>100%</span></button>
+                            <button class="ribbon-btn" onclick="setDocumentZoom(1.25)"><span>125%</span></button>
+                            <button class="ribbon-btn" onclick="setDocumentZoom('fit')"><span>Fit Page</span></button>
+                        </div>
+                        <span class="ribbon-group-label">Zoom</span>
+                    </div>
+
+                    <div class="ribbon-group">
+                        <div class="ribbon-group-tools">
+                            <select id="selectDocTheme" class="ribbon-select" onchange="changeDocumentTheme(this.value)">
+                                <option value="theme-altisec-navy" selected>Corporate Navy (AltiSec)</option>
+                                <option value="theme-modern-slate">Modern Slate</option>
+                                <option value="theme-emerald-soc">Cyber Emerald</option>
+                                <option value="theme-minimal-mono">Minimal Mono</option>
+                            </select>
+                        </div>
+                        <span class="ribbon-group-label">Document Theme</span>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- 3. MAIN WORKSPACE CONTAINER -->
+        <div class="pbi-workspace">
+
+            <!-- LEFT VIEW SWITCHER (POWER BI STYLE) -->
+            <aside class="pbi-view-rail">
+                <button class="rail-item active" data-view="report" onclick="switchView('report')" title="Report View: Word Document Canvas">
+                    <i class="fa-solid fa-file-lines"></i>
+                    <span class="rail-tooltip">Report (Word Canvas)</span>
+                </button>
+                <button class="rail-item" data-view="data" onclick="switchView('data')" title="Data View: Excel Data Grid Explorer">
+                    <i class="fa-solid fa-table"></i>
+                    <span class="rail-tooltip">Data Grid</span>
+                </button>
+                <button class="rail-item" data-view="model" onclick="switchView('model')" title="Model View: Column & Field Mapping">
+                    <i class="fa-solid fa-diagram-project"></i>
+                    <span class="rail-tooltip">Field Mapping</span>
+                </button>
+            </aside>
+
+            <!-- CENTER WORKSPACE -->
+            <main class="pbi-center-canvas">
+
+                <!-- VIEW 1: WORD DOCUMENT CANVAS (DEFAULT) -->
+                <div class="canvas-view active" id="view-report">
+                    <!-- CANVAS TOP UTILITY BAR -->
+                    <div class="canvas-infobar">
+                        <div class="infobar-left">
+                            <span class="info-pill"><i class="fa-solid fa-file-word text-blue"></i> A4 Standard Layout (210 &times; 297 mm)</span>
+                            <span class="info-pill" id="pillPageCount">Pages: 2</span>
+                            <span class="info-pill" id="pillActiveClient">Client: <strong>Tata Technologies</strong></span>
+                        </div>
+
+                        <div class="infobar-right">
+                            <button class="btn-canvas-tool" onclick="addNewA4Page()"><i class="fa-solid fa-plus"></i> Add Page</button>
+                            <span class="divider-v"></span>
+                            <button class="btn-canvas-tool" onclick="setDocumentZoom(0.8)"><i class="fa-solid fa-magnifying-glass-minus"></i></button>
+                            <span id="zoomLevelDisplay" style="font-size:11px; font-weight:700; min-width:38px; text-align:center;">100%</span>
+                            <button class="btn-canvas-tool" onclick="setDocumentZoom(1.2)"><i class="fa-solid fa-magnifying-glass-plus"></i></button>
+                        </div>
+                    </div>
+
+                    <!-- SCROLLABLE DESK CONTAINER WITH WORD A4 PAGES -->
+                    <div class="a4-desk-wrapper" id="deskWrapper">
+                        <div class="a4-desk" id="a4Desk">
+                            
+                            <!-- ================= PAGE 1: COVER & EXECUTIVE SUMMARY ================= -->
+                            <article class="a4-page" id="page-1" data-page="1">
+                                <header class="page-header">
+                                    <div class="doc-header-brand">
+                                        <i class="fa-solid fa-shield-halved brand-symbol"></i>
+                                        <div>
+                                            <div class="brand-co">ALTISEC TECHNOLOGIES</div>
+                                            <div class="brand-sub">Security Operations Center (SOC)</div>
+                                        </div>
+                                    </div>
+                                    <div class="doc-header-client">
+                                        <input type="text" class="editable-meta-input client-title" id="metaClientName" value="Tata Technologies" placeholder="CLIENT NAME">
+                                        <div class="doc-period-badge" id="badgePeriod">15 Aug 2026 &mdash; 21 Aug 2026</div>
+                                    </div>
+                                </header>
+
+                                <!-- REPORT HERO TITLE -->
+                                <section class="doc-hero-section">
+                                    <h1 class="report-main-title" contenteditable="true" id="txtCoverTitle">Weekly SOC Incident Telemetry Report</h1>
+                                    <div class="report-subtitle" contenteditable="true">Executive Performance, SLA Compliance, & Threat Activity Summary</div>
+                                </section>
+
+                                <!-- EXECUTIVE SUMMARY CALLOUT -->
+                                <section class="doc-section">
+                                    <h2 class="section-title"><i class="fa-solid fa-file-contract text-blue"></i> Executive Summary</h2>
+                                    <div class="editable-paragraph" contenteditable="true" id="txtExecSummary">
+                                        During the reporting period of <span class="token">{{reporting_period}}</span>, the AltiSec Security Operations Center monitored critical infrastructure for <span class="token">{{client_name}}</span>. A total of <strong><span class="token">{{total_incidents}}</span> security alerts</strong> were processed with an overall SLA compliance rate of <strong><span class="token">{{sla_compliance}}</span></strong> (exceeding the corporate 95% target). Zero unresolved Critical incidents remain at report close.
+                                    </div>
+                                </section>
+
+                                <!-- POWER BI DYNAMIC KPI CARDS CONTAINER -->
+                                <section class="doc-section">
+                                    <div class="section-header-flex">
+                                        <h2 class="section-title"><i class="fa-solid fa-gauge-high text-emerald"></i> Core Operational KPIs</h2>
+                                        <span class="live-tag"><i class="fa-solid fa-bolt"></i> Auto-Calculated</span>
+                                    </div>
+
+                                    <div class="kpi-cards-grid" id="kpiGridPage1">
+                                        <!-- CARD 1 -->
+                                        <div class="pbi-kpi-card" data-measure="total_incidents">
+                                            <div class="kpi-label">TOTAL INCIDENTS</div>
+                                            <div class="kpi-value" id="valTotalIncidents">1,284</div>
+                                            <div class="kpi-trend positive"><i class="fa-solid fa-arrow-trend-up"></i> +12.4% vs last period</div>
+                                        </div>
+
+                                        <!-- CARD 2 -->
+                                        <div class="pbi-kpi-card" data-measure="sla_compliance">
+                                            <div class="kpi-label">SLA COMPLIANCE</div>
+                                            <div class="kpi-value text-emerald" id="valSlaCompliance">98.2%</div>
+                                            <div class="kpi-trend positive"><i class="fa-solid fa-check"></i> Target: 95.0%</div>
+                                        </div>
+
+                                        <!-- CARD 3 -->
+                                        <div class="pbi-kpi-card" data-measure="avg_response">
+                                            <div class="kpi-label">AVG RESPONSE TIME</div>
+                                            <div class="kpi-value text-blue" id="valAvgResponse">2.4 hrs</div>
+                                            <div class="kpi-trend positive"><i class="fa-solid fa-arrow-trend-down"></i> -18% faster</div>
+                                        </div>
+
+                                        <!-- CARD 4 -->
+                                        <div class="pbi-kpi-card" data-measure="sev_critical">
+                                            <div class="kpi-label">CRITICAL BREACHES</div>
+                                            <div class="kpi-value text-red" id="valSevCritical">0</div>
+                                            <div class="kpi-trend neutral"><i class="fa-solid fa-shield-check"></i> 100% Contained</div>
+                                        </div>
+                                    </div>
+                                </section>
+
+                                <!-- VISUALS CONTAINER (CHARTS IN WORD) -->
+                                <section class="doc-section">
+                                    <div class="visuals-two-col">
+                                        <div class="pbi-visual-block" id="visual-block-1">
+                                            <div class="visual-header">
+                                                <span class="visual-title"><i class="fa-solid fa-chart-pie text-purple"></i> Incidents by Severity</span>
+                                                <div class="visual-actions">
+                                                    <button class="btn-vis-sm" onclick="toggleChartType('chartSeverity')" title="Toggle Bar / Donut"><i class="fa-solid fa-arrows-rotate"></i></button>
+                                                </div>
+                                            </div>
+                                            <div class="chart-container-box">
+                                                <canvas id="chartSeverity"></canvas>
+                                            </div>
+                                        </div>
+
+                                        <div class="pbi-visual-block" id="visual-block-2">
+                                            <div class="visual-header">
+                                                <span class="visual-title"><i class="fa-solid fa-chart-line text-cyan"></i> 7-Day Trend Velocity</span>
+                                            </div>
+                                            <div class="chart-container-box">
+                                                <canvas id="chartTrend"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+
+                                <footer class="page-footer">
+                                    <span>AltiSec Technologies SOC &bull; Strictly Confidential</span>
+                                    <span class="page-num">Page 1 of 2</span>
+                                </footer>
+                            </article>
+
+                            <!-- ================= PAGE 2: DETAILED ANALYSIS & AUDIT TABLE ================= -->
+                            <article class="a4-page" id="page-2" data-page="2">
+                                <header class="page-header">
+                                    <div class="doc-header-brand">
+                                        <i class="fa-solid fa-shield-halved brand-symbol"></i>
+                                        <div>
+                                            <div class="brand-co">ALTISEC TECHNOLOGIES</div>
+                                            <div class="brand-sub">Security Operations Center (SOC)</div>
+                                        </div>
+                                    </div>
+                                    <div class="doc-header-client">
+                                        <span class="doc-header-client-text" id="headerClientP2">Tata Technologies</span>
+                                        <span class="doc-header-cat">Technical Incident Appendix</span>
+                                    </div>
+                                </header>
+
+                                <!-- DETAILED INCIDENTS TABLE -->
+                                <section class="doc-section">
+                                    <div class="section-header-flex">
+                                        <h2 class="section-title"><i class="fa-solid fa-table-list text-blue"></i> High & Critical Incident Log</h2>
+                                        <span class="records-badge" id="tableRecordsCount">Showing Top Active Incidents</span>
+                                    </div>
+                                    <div class="pbi-table-wrapper">
+                                        <table class="pbi-data-table" id="docIncidentsTable">
+                                            <thead>
+                                                <tr>
+                                                    <th>Incident ID</th>
+                                                    <th>Alert Category / Threat</th>
+                                                    <th>Host / Asset</th>
+                                                    <th>Severity</th>
+                                                    <th>Response Time</th>
+                                                    <th>SLA</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="incidentsTableBody">
+                                                <!-- Auto-populated from dataset -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </section>
+
+                                <!-- SOC OBSERVATIONS & RECOMMENDATIONS -->
+                                <section class="doc-section">
+                                    <h2 class="section-title"><i class="fa-solid fa-lightbulb text-yellow"></i> Analyst Findings & Recommendations</h2>
+                                    <div class="recommendations-box">
+                                        <div class="rec-item">
+                                            <i class="fa-solid fa-circle-check text-green rec-icon"></i>
+                                            <div class="rec-content" contenteditable="true">
+                                                <strong>Credential Spray Mitigation:</strong> Authentication anomalies were successfully detected and isolated across endpoint perimeter without privilege escalation.
+                                            </div>
+                                        </div>
+                                        <div class="rec-item">
+                                            <i class="fa-solid fa-triangle-exclamation text-orange rec-icon"></i>
+                                            <div class="rec-content" contenteditable="true">
+                                                <strong>Host Telemetry Coverage:</strong> Ensure 12 newly provisioned cloud instances have the AltiSec EDR agent installed to maintain full visibility.
+                                            </div>
+                                        </div>
+                                        <div class="rec-item">
+                                            <i class="fa-solid fa-shield-halved text-blue rec-icon"></i>
+                                            <div class="rec-content" contenteditable="true">
+                                                <strong>SLA Performance:</strong> Team achieved a mean time to respond (MTTR) of 2.4 hours, well within the 4.0-hour client threshold.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+
+                                <!-- GOVERNANCE SIGN-OFF -->
+                                <section class="doc-section governance-section">
+                                    <div class="governance-grid">
+                                        <div class="signoff-box">
+                                            <div class="signoff-role">SOC Operations Lead</div>
+                                            <div class="signoff-name" contenteditable="true">Vaishnavi Wani</div>
+                                            <div class="signoff-status verified"><i class="fa-solid fa-circle-check"></i> Approved</div>
+                                        </div>
+                                        <div class="signoff-box">
+                                            <div class="signoff-role">SOC Manager</div>
+                                            <div class="signoff-name" contenteditable="true">Shaktiprasad Anami</div>
+                                            <div class="signoff-status verified"><i class="fa-solid fa-circle-check"></i> Approved</div>
+                                        </div>
+                                        <div class="signoff-box">
+                                            <div class="signoff-role">Governance Lead</div>
+                                            <div class="signoff-name" contenteditable="true">Saachi Joshi</div>
+                                            <div class="signoff-status verified"><i class="fa-solid fa-circle-check"></i> Certified</div>
+                                        </div>
+                                    </div>
+                                </section>
+
+                                <footer class="page-footer">
+                                    <span>AltiSec Technologies SOC &bull; Strictly Confidential</span>
+                                    <span class="page-num">Page 2 of 2</span>
+                                </footer>
+                            </article>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VIEW 2: DATA GRID EXPLORER (POWER BI DATA VIEW) -->
+                <div class="canvas-view" id="view-data">
+                    <div class="data-grid-header">
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <h3><i class="fa-solid fa-table text-emerald"></i> Ingested Dataset Explorer</h3>
+                            <span class="info-pill" id="dataViewSummary">0 total rows loaded</span>
+                        </div>
+                        <div style="display:flex; gap:10px;">
+                            <input type="text" id="dataGridSearch" placeholder="Search rows..." class="ribbon-input-sm" oninput="filterDataGrid(this.value)">
+                            <label class="btn-canvas-tool" for="excelFileInput"><i class="fa-solid fa-cloud-arrow-up"></i> Upload New Sheet</label>
+                        </div>
+                    </div>
+                    <div class="data-grid-container" id="dataGridContainer">
+                        <table class="pbi-data-view-table" id="dataViewTable">
+                            <thead id="dataViewThead"></thead>
+                            <tbody id="dataViewTbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- VIEW 3: MODEL & COLUMN MAPPING (POWER BI MODEL VIEW) -->
+                <div class="canvas-view" id="view-model">
+                    <div class="mapping-container">
+                        <div class="mapping-header">
+                            <h3><i class="fa-solid fa-diagram-project text-cyan"></i> Smart Column & Measure Mapping</h3>
+                            <p style="color:#94a3b8; font-size:12px;">Map your raw Excel/CSV headers to Report Studio dimensions. Once saved, these mappings persist automatically for future uploads.</p>
+                        </div>
+
+                        <div class="mapping-cards-grid">
+                            <div class="map-card">
+                                <label><i class="fa-solid fa-fingerprint text-blue"></i> Incident / Alert ID</label>
+                                <select class="map-select" id="mapColId"><option value="alert_id">alert_id / incident_id</option></select>
+                            </div>
+                            <div class="map-card">
+                                <label><i class="fa-solid fa-triangle-exclamation text-orange"></i> Severity / Priority</label>
+                                <select class="map-select" id="mapColSeverity"><option value="severity">severity / priority</option></select>
+                            </div>
+                            <div class="map-card">
+                                <label><i class="fa-solid fa-calendar-check text-green"></i> Created / Sent Time</label>
+                                <select class="map-select" id="mapColSent"><option value="sent_time">sent_time / timestamp</option></select>
+                            </div>
+                            <div class="map-card">
+                                <label><i class="fa-solid fa-clock-rotate-left text-cyan"></i> Revert / Resolved Time</label>
+                                <select class="map-select" id="mapColRevert"><option value="revert_time">revert_time / resolution_time</option></select>
+                            </div>
+                            <div class="map-card">
+                                <label><i class="fa-solid fa-server text-purple"></i> Host / Asset Name</label>
+                                <select class="map-select" id="mapColAsset"><option value="asset_name">asset_name / hostname</option></select>
+                            </div>
+                            <div class="map-card">
+                                <label><i class="fa-solid fa-circle-info text-pink"></i> Threat / Category</label>
+                                <select class="map-select" id="mapColCategory"><option value="category">category / rule_name</option></select>
+                            </div>
+                        </div>
+
+                        <div style="margin-top:20px; display:flex; gap:12px;">
+                            <button class="pbi-action-btn primary" onclick="applyColumnMapping()"><i class="fa-solid fa-check"></i> Apply Mapping & Recalculate</button>
+                            <button class="pbi-action-btn secondary" onclick="autoDetectMapping()"><i class="fa-solid fa-wand-magic-sparkles"></i> Auto-Detect Headers</button>
+                        </div>
+                    </div>
+                </div>
+
+            </main>
+
+            <!-- RIGHT SIDEBAR (POWER BI VISUALIZATIONS & FIELDS PANELS) -->
+            <aside class="pbi-right-dock">
+                <!-- VISUALIZATIONS PANE -->
+                <div class="pbi-dock-section">
+                    <div class="dock-section-title">
+                        <span><i class="fa-solid fa-chart-pie text-orange"></i> Visualizations</span>
+                    </div>
+                    <div class="visual-picker-grid">
+                        <button class="vis-icon-btn" onclick="insertVisualToDoc('card')" title="KPI Card"><i class="fa-solid fa-square-poll-vertical text-blue"></i></button>
+                        <button class="vis-icon-btn" onclick="insertVisualToDoc('bar')" title="Clustered Bar Chart"><i class="fa-solid fa-chart-column text-orange"></i></button>
+                        <button class="vis-icon-btn" onclick="insertVisualToDoc('donut')" title="Donut Chart"><i class="fa-solid fa-chart-pie text-purple"></i></button>
+                        <button class="vis-icon-btn" onclick="insertVisualToDoc('line')" title="Line Trend Chart"><i class="fa-solid fa-chart-line text-cyan"></i></button>
+                        <button class="vis-icon-btn" onclick="insertVisualToDoc('table')" title="Data Table"><i class="fa-solid fa-table-cells text-indigo"></i></button>
+                        <button class="vis-icon-btn" onclick="insertCalloutNote()" title="Callout Box"><i class="fa-solid fa-quote-left text-yellow"></i></button>
+                    </div>
+                </div>
+
+                <!-- DATA FIELDS PANE -->
+                <div class="pbi-dock-section flex-fill">
+                    <div class="dock-section-title">
+                        <span><i class="fa-solid fa-database text-cyan"></i> Data Fields</span>
+                        <span class="fields-count" id="fieldsCountBadge">8 Measures</span>
+                    </div>
+
+                    <div class="fields-tree">
+                        <!-- MEASURES FOLDER -->
+                        <div class="tree-group">
+                            <div class="tree-group-header" onclick="toggleTreeGroup(this)">
+                                <i class="fa-solid fa-chevron-down tree-arrow"></i>
+                                <i class="fa-solid fa-calculator text-emerald"></i>
+                                <span>Calculated Measures</span>
+                            </div>
+                            <div class="tree-items">
+                                <div class="tree-item" onclick="insertTokenToDoc('total_incidents')" title="Click to insert {{total_incidents}} token">
+                                    <i class="fa-solid fa-hashtag text-blue"></i>
+                                    <span>Total Incidents</span>
+                                    <span class="field-val-preview" id="previewTokenTotal">1,284</span>
+                                </div>
+                                <div class="tree-item" onclick="insertTokenToDoc('sla_compliance')" title="Click to insert {{sla_compliance}} token">
+                                    <i class="fa-solid fa-percent text-emerald"></i>
+                                    <span>SLA Compliance %</span>
+                                    <span class="field-val-preview" id="previewTokenSla">98.2%</span>
+                                </div>
+                                <div class="tree-item" onclick="insertTokenToDoc('avg_response')" title="Click to insert {{avg_response}} token">
+                                    <i class="fa-solid fa-stopwatch text-cyan"></i>
+                                    <span>Avg Response Time</span>
+                                    <span class="field-val-preview" id="previewTokenAvg">2.4h</span>
+                                </div>
+                                <div class="tree-item" onclick="insertTokenToDoc('sev_critical')" title="Click to insert {{sev_critical}} token">
+                                    <i class="fa-solid fa-fire text-red"></i>
+                                    <span>Critical Count</span>
+                                    <span class="field-val-preview" id="previewTokenCrit">0</span>
+                                </div>
+                                <div class="tree-item" onclick="insertTokenToDoc('sev_high')" title="Click to insert {{sev_high}} token">
+                                    <i class="fa-solid fa-circle-exclamation text-orange"></i>
+                                    <span>High Count</span>
+                                    <span class="field-val-preview" id="previewTokenHigh">14</span>
+                                </div>
+                                <div class="tree-item" onclick="insertTokenToDoc('reporting_period')" title="Click to insert {{reporting_period}} token">
+                                    <i class="fa-solid fa-calendar text-purple"></i>
+                                    <span>Reporting Period</span>
+                                </div>
+                                <div class="tree-item" onclick="insertTokenToDoc('client_name')" title="Click to insert {{client_name}} token">
+                                    <i class="fa-solid fa-building text-yellow"></i>
+                                    <span>Client Name</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- DATASET COLUMNS FOLDER -->
+                        <div class="tree-group">
+                            <div class="tree-group-header" onclick="toggleTreeGroup(this)">
+                                <i class="fa-solid fa-chevron-down tree-arrow"></i>
+                                <i class="fa-solid fa-table-list text-blue"></i>
+                                <span>Dataset Columns</span>
+                            </div>
+                            <div class="tree-items" id="datasetColumnsList">
+                                <div class="tree-item"><i class="fa-solid fa-font text-slate"></i><span>incident_id</span></div>
+                                <div class="tree-item"><i class="fa-solid fa-font text-slate"></i><span>severity</span></div>
+                                <div class="tree-item"><i class="fa-solid fa-calendar text-slate"></i><span>sent_time</span></div>
+                                <div class="tree-item"><i class="fa-solid fa-calendar text-slate"></i><span>revert_time</span></div>
+                                <div class="tree-item"><i class="fa-solid fa-server text-slate"></i><span>asset_name</span></div>
+                                <div class="tree-item"><i class="fa-solid fa-tag text-slate"></i><span>category</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+        </div>
+
+        <!-- 4. BOTTOM STATUS BAR -->
+        <footer class="pbi-statusbar">
+            <div class="statusbar-left">
+                <span><i class="fa-solid fa-check-double text-emerald"></i> Ready</span>
+                <span class="status-sep">|</span>
+                <span id="sbDatasetInfo">Sample SOC Dataset Active (1,284 records)</span>
+                <span class="status-sep">|</span>
+                <span id="sbPeriodInfo">Period: 15 Aug 2026 - 21 Aug 2026</span>
+            </div>
+            <div class="statusbar-right">
+                <span id="sbRefreshTimestamp">Refreshed: Just now</span>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- TOAST NOTIFICATION CONTAINER -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- MAIN POWER BI APPLICATION CONTROLLER -->
+    <script src="app.js?v=2.0"></script>
+</body>
+</html>

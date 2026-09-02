@@ -1,0 +1,1162 @@
+/* =========================================================================
+   POWER BI REPORT STUDIO - THEME & LAYOUT STYLESHEET
+   ========================================================================= */
+
+:root {
+    --pbi-bg-root: #141418;
+    --pbi-bg-titlebar: #1c1c22;
+    --pbi-bg-ribbon: #24242c;
+    --pbi-bg-ribbon-active: #2e2e38;
+    --pbi-bg-rail: #18181f;
+    --pbi-bg-canvas: #202028;
+    --pbi-bg-dock: #1e1e26;
+    --pbi-bg-card: #282834;
+    --pbi-border: #323240;
+    --pbi-border-subtle: #272733;
+    --pbi-yellow: #f59e0b;
+    --pbi-yellow-glow: rgba(245, 158, 11, 0.25);
+    --pbi-blue: #0ea5e9;
+    --pbi-emerald: #10b981;
+    --pbi-text-main: #f3f4f6;
+    --pbi-text-muted: #9ca3af;
+    --pbi-text-dim: #6b7280;
+
+    /* A4 Document styling */
+    --paper-bg: #ffffff;
+    --paper-text: #1e293b;
+    --paper-heading: #0f172a;
+    --paper-border: #e2e8f0;
+    --paper-accent: #0ea5e9;
+}
+
+body.powerbi-theme-light {
+    --pbi-bg-root: #f8fafc;
+    --pbi-bg-titlebar: #ffffff;
+    --pbi-bg-ribbon: #f1f5f9;
+    --pbi-bg-ribbon-active: #ffffff;
+    --pbi-bg-rail: #e2e8f0;
+    --pbi-bg-canvas: #cbd5e1;
+    --pbi-bg-dock: #f8fafc;
+    --pbi-bg-card: #ffffff;
+    --pbi-border: #cbd5e1;
+    --pbi-border-subtle: #e2e8f0;
+    --pbi-text-main: #0f172a;
+    --pbi-text-muted: #475569;
+    --pbi-text-dim: #64748b;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: var(--pbi-bg-root);
+    color: var(--pbi-text-main);
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+    user-select: none;
+}
+
+/* ================= 1. APPLICATION SHELL ================= */
+.pbi-app {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+}
+
+/* ================= 2. TITLE BAR ================= */
+.pbi-titlebar {
+    height: 38px;
+    background: var(--pbi-bg-titlebar);
+    border-bottom: 1px solid var(--pbi-border-subtle);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 14px;
+    flex-shrink: 0;
+}
+
+.pbi-title-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.pbi-brand-icon {
+    width: 26px;
+    height: 26px;
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: #000;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.pbi-app-name {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: -0.2px;
+}
+
+.pbi-badge {
+    background: rgba(245, 158, 11, 0.15);
+    color: var(--pbi-yellow);
+    font-size: 10px;
+    font-weight: 700;
+    padding: 1px 7px;
+    border-radius: 10px;
+    border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.pbi-quick-access {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: 12px;
+    border-left: 1px solid var(--pbi-border);
+    padding-left: 10px;
+}
+
+.pbi-qa-btn {
+    background: transparent;
+    border: none;
+    color: var(--pbi-text-muted);
+    width: 26px;
+    height: 26px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    transition: all 0.15s ease;
+}
+
+.pbi-qa-btn:hover {
+    background: var(--pbi-bg-card);
+    color: var(--pbi-text-main);
+}
+
+.pbi-doc-title {
+    font-size: 12px;
+    color: var(--pbi-text-muted);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.status-badge.live {
+    background: rgba(16, 185, 129, 0.15);
+    color: #10b981;
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    font-size: 9.5px;
+    font-weight: 700;
+    padding: 1px 6px;
+    border-radius: 8px;
+}
+
+.pbi-theme-toggle {
+    background: transparent;
+    border: 1px solid var(--pbi-border);
+    color: var(--pbi-text-muted);
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pbi-theme-toggle:hover {
+    color: var(--pbi-yellow);
+    background: var(--pbi-bg-card);
+}
+
+/* ================= 3. POWER BI RIBBON ================= */
+.pbi-ribbon {
+    background: var(--pbi-bg-ribbon);
+    border-bottom: 1px solid var(--pbi-border);
+    flex-shrink: 0;
+}
+
+.pbi-ribbon-tabs {
+    display: flex;
+    gap: 2px;
+    padding: 0 10px;
+    background: var(--pbi-bg-titlebar);
+    border-bottom: 1px solid var(--pbi-border-subtle);
+}
+
+.ribbon-tab {
+    background: transparent;
+    border: none;
+    color: var(--pbi-text-muted);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 6px 14px;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.15s ease;
+}
+
+.ribbon-tab:hover {
+    color: var(--pbi-text-main);
+}
+
+.ribbon-tab.active {
+    color: var(--pbi-text-main);
+    background: var(--pbi-bg-ribbon);
+    border-top: 2px solid var(--pbi-yellow);
+}
+
+.pbi-ribbon-content {
+    min-height: 86px;
+    padding: 6px 12px;
+    display: flex;
+    align-items: stretch;
+}
+
+.ribbon-pane {
+    display: none;
+    gap: 16px;
+    align-items: stretch;
+}
+
+.ribbon-pane.active {
+    display: flex;
+}
+
+.ribbon-group {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-right: 1px solid var(--pbi-border-subtle);
+    padding-right: 14px;
+}
+
+.ribbon-group-tools {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex: 1;
+}
+
+.ribbon-group-label {
+    font-size: 9.5px;
+    color: var(--pbi-text-dim);
+    text-align: center;
+    font-weight: 600;
+    margin-top: 4px;
+    letter-spacing: 0.3px;
+}
+
+.ribbon-btn {
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--pbi-text-main);
+    border-radius: 5px;
+    padding: 4px 8px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    transition: all 0.15s ease;
+    min-width: 54px;
+}
+
+.ribbon-btn:hover {
+    background: var(--pbi-bg-ribbon-active);
+    border-color: var(--pbi-border);
+}
+
+.ribbon-btn.large {
+    min-width: 68px;
+    height: 58px;
+}
+
+.ribbon-btn.large i {
+    font-size: 18px;
+}
+
+.ribbon-btn.primary-glow {
+    background: rgba(16, 185, 129, 0.12);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    color: #10b981;
+}
+
+.ribbon-btn.primary-glow:hover {
+    background: rgba(16, 185, 129, 0.25);
+    box-shadow: 0 0 12px rgba(16, 185, 129, 0.3);
+}
+
+.ribbon-btn.btn-highlight-word {
+    background: rgba(14, 165, 233, 0.12);
+    border: 1px solid rgba(14, 165, 233, 0.35);
+    color: #38bdf8;
+}
+
+.ribbon-btn.btn-highlight-word:hover {
+    background: rgba(14, 165, 233, 0.25);
+}
+
+.ribbon-input-block {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    font-size: 10.5px;
+    color: var(--pbi-text-muted);
+}
+
+.ribbon-input-sm {
+    background: var(--pbi-bg-titlebar);
+    border: 1px solid var(--pbi-border);
+    color: var(--pbi-text-main);
+    padding: 3px 6px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    outline: none;
+}
+
+.ribbon-select {
+    background: var(--pbi-bg-titlebar);
+    border: 1px solid var(--pbi-border);
+    color: var(--pbi-text-main);
+    padding: 5px 8px;
+    border-radius: 4px;
+    font-size: 11.5px;
+    outline: none;
+}
+
+/* ================= 4. MAIN WORKSPACE ================= */
+.pbi-workspace {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+}
+
+/* ================= LEFT VIEW SWITCHER RAIL ================= */
+.pbi-view-rail {
+    width: 44px;
+    background: var(--pbi-bg-rail);
+    border-right: 1px solid var(--pbi-border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 10px;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.rail-item {
+    width: 32px;
+    height: 32px;
+    background: transparent;
+    border: none;
+    color: var(--pbi-text-muted);
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    position: relative;
+    transition: all 0.15s ease;
+}
+
+.rail-item:hover {
+    background: var(--pbi-bg-card);
+    color: var(--pbi-text-main);
+}
+
+.rail-item.active {
+    background: var(--pbi-bg-card);
+    color: var(--pbi-yellow);
+    border-left: 2px solid var(--pbi-yellow);
+}
+
+/* ================= CENTER CANVAS ================= */
+.pbi-center-canvas {
+    flex: 1;
+    background: var(--pbi-bg-canvas);
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    overflow: hidden;
+    position: relative;
+}
+
+.canvas-view {
+    display: none;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.canvas-view.active {
+    display: flex;
+}
+
+.canvas-infobar {
+    height: 32px;
+    background: var(--pbi-bg-titlebar);
+    border-bottom: 1px solid var(--pbi-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    flex-shrink: 0;
+}
+
+.infobar-left, .infobar-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.info-pill {
+    font-size: 11px;
+    color: var(--pbi-text-muted);
+}
+
+.btn-canvas-tool {
+    background: var(--pbi-bg-card);
+    border: 1px solid var(--pbi-border);
+    color: var(--pbi-text-main);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 10.5px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-canvas-tool:hover {
+    border-color: var(--pbi-blue);
+    color: #38bdf8;
+}
+
+.divider-v {
+    width: 1px;
+    height: 14px;
+    background: var(--pbi-border);
+}
+
+/* ================= A4 WORD DOCUMENT DESK ================= */
+.a4-desk-wrapper {
+    flex: 1;
+    overflow: auto;
+    padding: 24px;
+    display: flex;
+    justify-content: center;
+    background: var(--pbi-bg-canvas);
+}
+
+.a4-desk {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 28px;
+    transition: transform 0.2s ease;
+    transform-origin: top center;
+}
+
+/* TRUE A4 RATIO (210mm x 297mm) */
+.a4-page {
+    width: 210mm;
+    min-height: 297mm;
+    background: var(--paper-bg);
+    color: var(--paper-text);
+    padding: 20mm 18mm;
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45);
+    border-radius: 3px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    user-select: text;
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid var(--paper-accent);
+    padding-bottom: 12px;
+    margin-bottom: 16px;
+}
+
+.doc-header-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.brand-symbol {
+    font-size: 26px;
+    color: #0ea5e9;
+}
+
+.brand-co {
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    color: #0f172a;
+}
+
+.brand-sub {
+    font-size: 10.5px;
+    color: #64748b;
+    font-weight: 600;
+}
+
+.doc-header-client {
+    text-align: right;
+}
+
+.editable-meta-input.client-title {
+    font-size: 15px;
+    font-weight: 800;
+    color: #0f172a;
+    border: none;
+    text-align: right;
+    outline: none;
+    background: transparent;
+    width: 220px;
+}
+
+.editable-meta-input.client-title:focus {
+    border-bottom: 1px dashed #0ea5e9;
+}
+
+.doc-period-badge {
+    display: inline-block;
+    background: #f1f5f9;
+    color: #475569;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-top: 3px;
+}
+
+.doc-hero-section {
+    margin-bottom: 18px;
+}
+
+.report-main-title {
+    font-size: 22px;
+    font-weight: 800;
+    color: #0f172a;
+    letter-spacing: -0.4px;
+    outline: none;
+}
+
+.report-subtitle {
+    font-size: 12px;
+    color: #64748b;
+    margin-top: 4px;
+    font-weight: 500;
+    outline: none;
+}
+
+.doc-section {
+    margin-bottom: 18px;
+}
+
+.section-header-flex {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.section-title {
+    font-size: 13.5px;
+    font-weight: 800;
+    color: #0f172a;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    letter-spacing: -0.2px;
+    text-transform: uppercase;
+}
+
+.live-tag {
+    font-size: 10px;
+    font-weight: 700;
+    background: #ecfdf5;
+    color: #059669;
+    padding: 1px 6px;
+    border-radius: 4px;
+}
+
+.editable-paragraph {
+    font-size: 11.5px;
+    line-height: 1.6;
+    color: #334155;
+    outline: none;
+    background: #f8fafc;
+    border-left: 3px solid #0ea5e9;
+    padding: 10px 14px;
+    border-radius: 0 6px 6px 0;
+}
+
+.token {
+    background: #e0f2fe;
+    color: #0369a1;
+    font-weight: 700;
+    padding: 0 4px;
+    border-radius: 3px;
+}
+
+/* POWER BI KPI CARDS GRID */
+.kpi-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+}
+
+.pbi-kpi-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 10px 12px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+}
+
+.kpi-label {
+    font-size: 9px;
+    font-weight: 800;
+    color: #64748b;
+    letter-spacing: 0.5px;
+}
+
+.kpi-value {
+    font-size: 20px;
+    font-weight: 800;
+    color: #0f172a;
+    margin: 4px 0 2px 0;
+    font-family: 'Outfit', sans-serif;
+}
+
+.kpi-trend {
+    font-size: 10px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.kpi-trend.positive { color: #16a34a; }
+.kpi-trend.negative { color: #dc2626; }
+.kpi-trend.neutral { color: #0284c7; }
+
+/* VISUAL BLOCKS & CHARTS */
+.visuals-two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+.pbi-visual-block {
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 10px;
+    background: #ffffff;
+}
+
+.visual-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.visual-title {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: #0f172a;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn-vis-sm {
+    background: transparent;
+    border: none;
+    color: #64748b;
+    cursor: pointer;
+    font-size: 11px;
+}
+
+.btn-vis-sm:hover { color: #0f172a; }
+
+.chart-container-box {
+    height: 160px;
+    width: 100%;
+    position: relative;
+}
+
+/* DATA TABLE IN WORD */
+.pbi-table-wrapper {
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.pbi-data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 10.5px;
+}
+
+.pbi-data-table th {
+    background: #f1f5f9;
+    color: #0f172a;
+    font-weight: 700;
+    padding: 7px 10px;
+    text-align: left;
+    border-bottom: 1px solid #cbd5e1;
+}
+
+.pbi-data-table td {
+    padding: 6px 10px;
+    border-bottom: 1px solid #f1f5f9;
+    color: #334155;
+}
+
+.badge-sev {
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 9px;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+.badge-sev.critical { background: #fee2e2; color: #b91c1c; }
+.badge-sev.high { background: #ffedd5; color: #c2410c; }
+.badge-sev.medium { background: #fef3c7; color: #b45309; }
+.badge-sev.low { background: #dcfce7; color: #15803d; }
+
+.badge-sla.pass { color: #16a34a; font-weight: 700; }
+.badge-sla.fail { color: #dc2626; font-weight: 700; }
+
+/* RECOMMENDATIONS */
+.recommendations-box {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.rec-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 8px 12px;
+}
+
+.rec-icon {
+    margin-top: 3px;
+    font-size: 13px;
+}
+
+.rec-content {
+    font-size: 11px;
+    line-height: 1.5;
+    outline: none;
+    color: #334155;
+}
+
+/* GOVERNANCE MATRIX */
+.governance-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.signoff-box {
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 8px 10px;
+    background: #f8fafc;
+}
+
+.signoff-role {
+    font-size: 9.5px;
+    font-weight: 700;
+    color: #64748b;
+}
+
+.signoff-name {
+    font-size: 12px;
+    font-weight: 800;
+    color: #0f172a;
+    margin: 2px 0 4px 0;
+    outline: none;
+}
+
+.signoff-status.verified {
+    font-size: 9.5px;
+    color: #16a34a;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.page-footer {
+    display: flex;
+    justify-content: space-between;
+    font-size: 9.5px;
+    color: #94a3b8;
+    border-top: 1px solid #e2e8f0;
+    padding-top: 10px;
+    margin-top: auto;
+}
+
+/* ================= 5. RIGHT DOCK (VISUALS & FIELDS) ================= */
+.pbi-right-dock {
+    width: 260px;
+    background: var(--pbi-bg-dock);
+    border-left: 1px solid var(--pbi-border);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+}
+
+.pbi-dock-section {
+    border-bottom: 1px solid var(--pbi-border);
+    padding: 10px 12px;
+}
+
+.pbi-dock-section.flex-fill {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.dock-section-title {
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--pbi-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.fields-count {
+    background: var(--pbi-bg-card);
+    color: var(--pbi-yellow);
+    font-size: 9.5px;
+    padding: 1px 6px;
+    border-radius: 10px;
+    border: 1px solid var(--pbi-border);
+}
+
+.visual-picker-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+}
+
+.vis-icon-btn {
+    background: var(--pbi-bg-card);
+    border: 1px solid var(--pbi-border);
+    border-radius: 6px;
+    height: 38px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    transition: all 0.15s ease;
+}
+
+.vis-icon-btn:hover {
+    border-color: var(--pbi-yellow);
+    background: var(--pbi-bg-ribbon-active);
+    transform: translateY(-1px);
+}
+
+.fields-tree {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.tree-group-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--pbi-text-main);
+    padding: 4px 6px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.tree-group-header:hover {
+    background: var(--pbi-bg-card);
+}
+
+.tree-arrow {
+    font-size: 9px;
+    color: var(--pbi-text-dim);
+    transition: transform 0.2s ease;
+}
+
+.tree-items {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding-left: 20px;
+    margin-top: 2px;
+}
+
+.tree-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    color: var(--pbi-text-muted);
+    padding: 4px 6px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.tree-item:hover {
+    background: var(--pbi-bg-card);
+    color: var(--pbi-text-main);
+}
+
+.field-val-preview {
+    margin-left: auto;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--pbi-yellow);
+    font-family: 'JetBrains Mono', monospace;
+}
+
+/* ================= 6. DATA VIEW & MODEL VIEW ================= */
+.data-grid-header {
+    height: 46px;
+    background: var(--pbi-bg-titlebar);
+    border-bottom: 1px solid var(--pbi-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+}
+
+.data-grid-container {
+    flex: 1;
+    overflow: auto;
+    padding: 16px;
+}
+
+.pbi-data-view-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11.5px;
+    background: var(--pbi-bg-dock);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.pbi-data-view-table th {
+    background: var(--pbi-bg-titlebar);
+    color: var(--pbi-text-muted);
+    font-weight: 700;
+    padding: 8px 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--pbi-border);
+}
+
+.pbi-data-view-table td {
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--pbi-border-subtle);
+    color: var(--pbi-text-main);
+}
+
+.mapping-container {
+    padding: 24px;
+    overflow-y: auto;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.mapping-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    margin-top: 16px;
+}
+
+.map-card {
+    background: var(--pbi-bg-dock);
+    border: 1px solid var(--pbi-border);
+    border-radius: 8px;
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.map-card label {
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--pbi-text-muted);
+}
+
+.map-select {
+    background: var(--pbi-bg-titlebar);
+    border: 1px solid var(--pbi-border);
+    color: var(--pbi-text-main);
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    outline: none;
+}
+
+.pbi-action-btn {
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.pbi-action-btn.primary {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: #fff;
+}
+
+.pbi-action-btn.secondary {
+    background: var(--pbi-bg-card);
+    color: var(--pbi-text-main);
+    border: 1px solid var(--pbi-border);
+}
+
+/* ================= 7. STATUS BAR ================= */
+.pbi-statusbar {
+    height: 24px;
+    background: var(--pbi-bg-titlebar);
+    border-top: 1px solid var(--pbi-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 12px;
+    font-size: 10px;
+    color: var(--pbi-text-dim);
+    flex-shrink: 0;
+}
+
+.statusbar-left, .statusbar-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.status-sep {
+    color: var(--pbi-border);
+}
+
+/* TOAST NOTIFICATION */
+.toast-container {
+    position: fixed;
+    bottom: 32px;
+    right: 24px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.pbi-toast {
+    background: #18181b;
+    border: 1px solid var(--pbi-yellow);
+    color: #f8fafc;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    animation: toastFadeIn 0.2s ease;
+}
+
+@keyframes toastFadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* UTILITY CLASSES */
+.text-green { color: #22c55e; }
+.text-emerald { color: #10b981; }
+.text-blue { color: #0ea5e9; }
+.text-cyan { color: #06b6d4; }
+.text-purple { color: #a855f7; }
+.text-yellow { color: #f59e0b; }
+.text-orange { color: #f97316; }
+.text-red { color: #ef4444; }
+.text-pink { color: #ec4899; }
+.text-indigo { color: #6366f1; }
+.text-slate { color: #94a3b8; }
+
+/* PRINT RULES */
+@media print {
+    body {
+        background: #ffffff !important;
+        color: #000000 !important;
+    }
+    .pbi-titlebar, .pbi-ribbon, .pbi-view-rail, .pbi-right-dock, .pbi-statusbar, .canvas-infobar {
+        display: none !important;
+    }
+    .pbi-center-canvas, .a4-desk-wrapper, .a4-desk {
+        padding: 0 !important;
+        margin: 0 !important;
+        background: transparent !important;
+        transform: none !important;
+    }
+    .a4-page {
+        box-shadow: none !important;
+        margin: 0 !important;
+        page-break-after: always;
+        break-after: page;
+        width: 100% !important;
+        min-height: auto !important;
+    }
+}

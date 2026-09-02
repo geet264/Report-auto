@@ -1,0 +1,17 @@
+﻿{
+  "name": "altisec-report-studio",
+  "version": "1.5.0",
+  "description": "AltiSec Report Automation Studio for SOC Weekly & Monthly Reports",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [
+    "soc-reporting",
+    "report-automation",
+    "word-docx",
+    "altisec"
+  ],
+  "author": "AltiSec Technologies Pvt. Ltd.",
+  "license": "ISC"
+}
