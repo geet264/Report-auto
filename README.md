@@ -67,4 +67,4 @@ The application will open automatically at:
 
 ## 👤 Author
 - **Geeta Jogi** ([@geet264](https://github.com/geet264))  
-- AltiSec Technologies Pvt. Ltd.
+
