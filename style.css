@@ -418,7 +418,7 @@ body {
 }
 
 .canvas-infobar {
-    height: 38px;
+    height: 32px;
     background: var(--pbi-bg-titlebar);
     border-bottom: 1px solid var(--pbi-border);
     display: flex;
@@ -434,78 +434,6 @@ body {
     gap: 12px;
 }
 
-.infobar-center {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.btn-canvas-refresh {
-    background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.2));
-    border: 1px solid rgba(16, 185, 129, 0.5);
-    color: #10b981;
-    padding: 4px 12px;
-    border-radius: 6px;
-    font-size: 11.5px;
-    font-weight: 700;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    transition: all 0.15s ease;
-}
-
-.btn-canvas-refresh:hover {
-    background: rgba(16, 185, 129, 0.35);
-    box-shadow: 0 0 12px rgba(16, 185, 129, 0.3);
-    color: #34d399;
-}
-
-.zoom-controls-group {
-    display: flex;
-    align-items: center;
-    background: var(--pbi-bg-card);
-    border: 1px solid var(--pbi-border);
-    border-radius: 6px;
-    overflow: hidden;
-}
-
-.btn-zoom {
-    background: transparent;
-    border: none;
-    color: var(--pbi-text-muted);
-    padding: 4px 9px;
-    cursor: pointer;
-    font-size: 11px;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.15s ease;
-}
-
-.btn-zoom:hover {
-    background: var(--pbi-bg-ribbon-active);
-    color: var(--pbi-text-main);
-}
-
-.btn-zoom.reset-btn, .btn-zoom.fit-btn {
-    border-left: 1px solid var(--pbi-border);
-    font-size: 10px;
-    font-weight: 700;
-    padding: 4px 8px;
-}
-
-.zoom-level-text {
-    font-size: 11px;
-    font-weight: 700;
-    min-width: 44px;
-    text-align: center;
-    color: var(--pbi-yellow);
-    font-family: 'JetBrains Mono', monospace;
-    padding: 0 4px;
-}
-
 .info-pill {
     font-size: 11px;
     color: var(--pbi-text-muted);
@@ -515,12 +443,11 @@ body {
     background: var(--pbi-bg-card);
     border: 1px solid var(--pbi-border);
     color: var(--pbi-text-main);
-    padding: 4px 10px;
-    border-radius: 6px;
-    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 10.5px;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.15s ease;
 }
 
 .btn-canvas-tool:hover {
@@ -530,7 +457,7 @@ body {
 
 .divider-v {
     width: 1px;
-    height: 16px;
+    height: 14px;
     background: var(--pbi-border);
 }
 
